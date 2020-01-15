@@ -51,8 +51,8 @@ function actions(firstPath, domainName, wantedFolder, thisDay) {
                 __dirname + '/zipler' + '/' + domainName + '/' + wantedFolder + '/' + thisDay, // arşivin olacağı konum
                 dirNames[j],                                                        //zip dosyasının ismi
                 domainName,                                                         //ziplenecek dosyanın bulunduğu domain ismi
-                wantedFolder,
-                thisDay                                                        //ziplenecek dosyanın ismi
+                wantedFolder,                                                       //ziplenecek dosyanın ismi
+                thisDay                                                             //Uygulamanın başladığı tarih
             );
 
         }
