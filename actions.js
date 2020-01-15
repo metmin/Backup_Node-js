@@ -25,12 +25,16 @@ function actions(firstPath, domainName, wantedFolder, thisDay) {
 
     var dirLength = dirNames.length;
 
+
     if (dirLength == 0) {
 
         try {
 
             fs.appendFileSync('logs.txt',
                 domainName + "'de " + wantedFolder + ' dosyası boş. ARSIVLENECEK DOSYA YOK!\n');
+
+            console.log(
+                domainName + "'de " + wantedFolder + ' dosyası boş.\n');
 
         } catch (err) {
             console.log(err);
@@ -44,10 +48,11 @@ function actions(firstPath, domainName, wantedFolder, thisDay) {
 
             archive(
                 secondPath + '/' + dirNames[j],                                     // Arşivlenecek dosyanın bulunduğu konum
-                './zipler' + '/' + domainName + '/' + wantedFolder + '/' + thisDay, // arşivin olacağı konum
+                __dirname + '/zipler' + '/' + domainName + '/' + wantedFolder + '/' + thisDay, // arşivin olacağı konum
                 dirNames[j],                                                        //zip dosyasının ismi
                 domainName,                                                         //ziplenecek dosyanın bulunduğu domain ismi
-                wantedFolder                                                        //ziplenecek dosyanın ismi
+                wantedFolder,
+                thisDay                                                        //ziplenecek dosyanın ismi
             );
 
         }

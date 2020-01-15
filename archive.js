@@ -1,39 +1,84 @@
-const folderZipper = require('folder-zipper');
+var fs = require('fs');
+var archiver = require('archiver');
 
-const fs = require('fs')
+function archive(inputPath, zipPath, zipName, domainName, wantedFolder, thisDay) {
 
-function archive(inputpath, zipPath, zipName, domainName, wantedFolder) {
+    dosya(domainName, wantedFolder, thisDay);
 
-    folderZipper(inputpath, zipPath + '/' + zipName + '.zip')
-        .then(result => {
-
-            console.log("'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "'" + ' arsivlendi.');
-
-            // console.log(result);
-
-            try {
-
-                fs.appendFileSync('logs.txt',
-                    "'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "' arşivlendi.\n");
-
-            } catch (err) {
-                console.log(err);
-            }
-
-        })
-        .catch(error => {
-            console.log(error);
-
-            try {
-
-                fs.appendFileSync('logs.txt', "'" + zipName + "'" + ' arşivlenemedi!!!!\n' + error + '\n');
-
-            } catch (err) {
-                console.log(err);
-            }
+    var output = fs.createWriteStream(zipPath + '/' + zipName + '.zip');
+    var archive = archiver('zip', {
+        zlib: { level: 1 } // Sets the compression level.
+    });
 
 
-        });
+    output.on('close', function () {
+        console.log("'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "'" + ' arsivlendi.');
+
+        try {
+
+            fs.appendFileSync('logs.txt',
+                "'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "' arşivlendi.\n");
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    });
+
+    output.on('end', function () {
+        console.log('Data has been drained');
+    });
+
+
+    archive.on('warning', function (err) {
+        if (err.code === 'ENOENT') {
+            // log warning
+        } else {
+            // throw error
+            throw err;
+        }
+    });
+
+
+    archive.on('error', function (err) {
+        throw err;
+    });
+
+
+    archive.pipe(output);
+
+
+    archive.directory(inputPath, true);
+
+
+    archive.finalize();
+
+}
+
+
+function dosya(domainName, wantedFolder, thisDay) {
+
+    var dir = __dirname + '/zipler/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+
+    var dir2 = dir + domainName + '/';
+    if (!fs.existsSync(dir2)) {
+        fs.mkdirSync(dir2);
+    }
+
+    var dir3 = dir2 + wantedFolder + '/';
+    if (!fs.existsSync(dir3)) {
+        fs.mkdirSync(dir3);
+    }
+
+    var dir4 = dir3 + thisDay + '/';
+    if (!fs.existsSync(dir4)) {
+        fs.mkdirSync(dir4);
+    }
+
+
 
 }
 
