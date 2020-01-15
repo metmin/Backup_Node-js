@@ -1,7 +1,7 @@
 Install this npm packages before starting:
 
-    1)  readline-sync
-    2)  folder-zipper
+      readline-sync
+      folder-zipper
 
 the commands are:
 
