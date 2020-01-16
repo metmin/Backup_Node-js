@@ -1,26 +1,19 @@
 const fs = require('fs');
 
-var readlineSync = require('readline-sync');
-
 const { actions } = require('./actions');
 
+var { Time } = require('./getNow');
 
 
 
-var date = new Date();
-
-var month = date.getUTCMonth() + 1;
-
-var thisDay = date.getUTCDate() + '-' + month.toString() + '-' + date.getFullYear() + '_' + date.getHours() + '-' + date.getMinutes();
+var startMoment = new Time();
 
 try {
-    fs.appendFileSync('logs.txt', '\n\n' + thisDay + '\n');
-    console.log('Log kaydi basladi.');
+    fs.appendFileSync('logs.txt', '\n\n' + startMoment.thisMoment + '\n');
+    console.log('Log kaydi basladi. ' + startMoment.thisMoment);
 } catch (err) {
     console.log(err);
 }
-
-
 
 
 
@@ -32,13 +25,10 @@ var domainNameslength = domainNames.length;
 
 
 
+var wantedFolder = process.argv[2];
 
-////////////KONSOLA wwwrot dosyasının içinde ziplemek istediğin dosyayı yaz ////////////////
-////////Burada fonksiyonun içindeki yazı konsolda bize soru olarak geliyor./////////////////
 
-var wantedFolder = readlineSync.question('Ziplemek istedigin dosya ismini gir:');
 
-///////////////////////////////////////////////////////////////////////////////////////////
 
 for (i = 0; i < domainNameslength; i++) {
 
@@ -46,7 +36,7 @@ for (i = 0; i < domainNameslength; i++) {
 
         var domainName = domainNames[i];
 
-        actions(firstPath, domainName, wantedFolder, thisDay);
+        actions(firstPath, domainName, wantedFolder, startMoment.thisMoment, startMoment.minute, startMoment.second);
 
     }
     else {

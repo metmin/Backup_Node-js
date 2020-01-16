@@ -2,7 +2,9 @@ const fs = require('fs');
 
 const { archive } = require('./archive');
 
-function actions(firstPath, domainName, wantedFolder, thisDay) {
+var { Time } = require('./getNow');
+
+function actions(firstPath, domainName, wantedFolder, startMoment) {
 
 
 
@@ -46,13 +48,17 @@ function actions(firstPath, domainName, wantedFolder, thisDay) {
 
         for (j = 0; j < dirLength; j++) {
 
+            startZip = new Time();
+
             archive(
                 secondPath + '/' + dirNames[j],                                     // Arşivlenecek dosyanın bulunduğu konum
-                __dirname + '/zipler' + '/' + domainName + '/' + wantedFolder + '/' + thisDay, // arşivin olacağı konum
+                __dirname + '/zipler' + '/' + domainName + '/' + wantedFolder + '/' + startMoment, // arşivin olacağı konum
                 dirNames[j],                                                        //zip dosyasının ismi
                 domainName,                                                         //ziplenecek dosyanın bulunduğu domain ismi
                 wantedFolder,                                                       //ziplenecek dosyanın ismi
-                thisDay                                                             //Uygulamanın başladığı tarih
+                startMoment,
+                startZip.minute,
+                startZip.second
             );
 
         }
