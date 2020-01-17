@@ -4,6 +4,8 @@ const { archive } = require('./archive');
 
 var { Time } = require('./getNow');
 
+var { addFailLog } = require('./mongo');
+
 function actions(firstPath, domainName, wantedFolder, startMoment) {
 
 
@@ -32,8 +34,10 @@ function actions(firstPath, domainName, wantedFolder, startMoment) {
 
         try {
 
-            fs.appendFileSync('logs.txt',
-                domainName + "'de " + wantedFolder + ' dosyası boş. ARSIVLENECEK DOSYA YOK!\n');
+            // fs.appendFileSync('logs.txt',
+            //   domainName + "'de " + wantedFolder + ' dosyası boş. ARSIVLENECEK DOSYA YOK!\n');
+
+            addFailLog(wantedFolder, secondPath, startMoment, domainName + "'de " + wantedFolder + ' dosyası boş. ARSIVLENECEK DOSYA YOK!')
 
             console.log(
                 domainName + "'de " + wantedFolder + ' dosyası boş.\n');

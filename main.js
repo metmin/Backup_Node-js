@@ -4,16 +4,10 @@ const { actions } = require('./actions');
 
 var { Time } = require('./getNow');
 
-
+var { addFailLog, addSeriousFailLog } = require('./mongo');
 
 var startMoment = new Time();
 
-try {
-    fs.appendFileSync('logs.txt', '\n\n' + startMoment.thisMoment + '\n');
-    console.log('Log kaydi basladi. ' + startMoment.thisMoment);
-} catch (err) {
-    console.log(err);
-}
 
 
 
@@ -44,71 +38,16 @@ for (i = 0; i < domainNameslength; i++) {
 
         try {
 
-            fs.appendFileSync('logs.txt', '!!!!!! ' + domainNames[i] + "'de '" + wantedFolder + "' dosyasi yok! ARSIVLENECEK DOSYA YOK!!!!!!\n");
+            addFailLog(wantedFolder, firstPath + '/' + domainNames[i], startMoment.thisMoment,
+                '!!!!!! ' + domainNames[i] + "'de '" + wantedFolder + "' dosyasi yok! ARSIVLENECEK DOSYA YOK!!!!!!");
 
         } catch (err) {
-            /* Handle the error */
+            throw err;
+
         }
 
     }
 
 }
-
-
-
-/*
-
-var secondPaths = new Array;
-
-for (i = 0; i < domainNameslength; i++) {
-
-    secondPaths[i] = firstPath + domainNames[i] + '/wwwrot' + '/' + wantedFolder;
-
-    console.log(secondPaths[i]);
-
-}
-
-
-
-
-var dirNames = new Array();
-
-for (i = 0; i < domainNameslength; i++) {
-
-    //logNames[i] = readFiles(secondPaths[i]);
-
-    dirNames[i] = fs.readdirSync(secondPaths[i]);
-
-    console.log(dirNames[i]);
-
-}
-
-
-
-
-
-for (i = 0; i < secondPaths.length; i++) {
-
-
-    for (j = 0; j < dirNames[i].length; j++) {
-
-        archive(
-            secondPaths[i],
-            './zipler' + '/' + domainNames[i] + '/' + wantedFolder,
-            dirNames[i][j]
-        );
-
-    }
-
-}
-
-*/
-
-
-
-
-
-
-
 
 

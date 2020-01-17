@@ -1,6 +1,7 @@
 var fs = require('fs');
 var archiver = require('archiver');
 var { Time } = require('./getNow');
+var { addLog, addSeriousFailLog } = require('./mongo');
 
 function archive(inputPath, zipPath, zipName, domainName, wantedFolder, startMoment, startMinute, startSecond) {
 
@@ -28,10 +29,11 @@ function archive(inputPath, zipPath, zipName, domainName, wantedFolder, startMom
 
             }
 
-            fs.appendFileSync('logs.txt',
-                "'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "' arşivlendi ve " +
-                processMinute + ' dakika, ' + processSecond + " saniye surdu.\n");
+            //fs.appendFileSync('logs.txt',
+            //  "'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "' arşivlendi ve " +
+            // processMinute + ' dakika, ' + processSecond + " saniye surdu.\n");
 
+            addLog(zipName, inputPath, startMoment, startMoment, endMoment.thisMoment);
 
             console.log("'" + domainName + "' domaininde '" + wantedFolder + "' dosyasi icindeki '" + zipName + "'" + "' arşivlendi ve " +
                 processMinute + ' dakika, ' + processSecond + " saniye surdu.");
@@ -49,15 +51,16 @@ function archive(inputPath, zipPath, zipName, domainName, wantedFolder, startMom
 
     archive.on('warning', function (err) {
         if (err.code === 'ENOENT') {
-            // log warning
+            addSeriousFailLog(zipName, inputPath, startMoment, err);
         } else {
-            // throw error
+            addSeriousFailLog(zipName, inputPath, startMoment, err);
             throw err;
         }
     });
 
 
     archive.on('error', function (err) {
+        addSeriousFailLog(zipName, inputPath, startMoment, err);
         throw err;
     });
 
