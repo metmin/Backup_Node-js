@@ -54,8 +54,8 @@ function archive(inputPath, zipPath, zipName, domainName, wantedFolder, startMom
             addSeriousFailLog(zipName, inputPath, startMoment, err);
         } else {
             addSeriousFailLog(zipName, inputPath, startMoment, err);
-            throw err;
         }
+        throw err;
     });
 
 
@@ -67,9 +67,11 @@ function archive(inputPath, zipPath, zipName, domainName, wantedFolder, startMom
 
     archive.pipe(output);
 
-
-    archive.directory(inputPath, true);
-
+    if (fs.lstatSync(inputPath).isDirectory()) {
+        archive.directory(inputPath, zipName);
+    } else {
+        archive.append(fs.createReadStream(inputPath), { name: zipName });
+    }
 
     archive.finalize();
 
@@ -83,21 +85,20 @@ function dosya(domainName, wantedFolder, startMoment) {
         fs.mkdirSync(dir);
     }
 
-    var dir2 = dir + domainName + '/';
+    var dir2 = dir + startMoment + '/';
     if (!fs.existsSync(dir2)) {
         fs.mkdirSync(dir2);
     }
 
-    var dir3 = dir2 + wantedFolder + '/';
+    var dir3 = dir2 + domainName + '/';
     if (!fs.existsSync(dir3)) {
         fs.mkdirSync(dir3);
     }
 
-    var dir4 = dir3 + startMoment + '/';
+    var dir4 = dir3 + wantedFolder + '/';
     if (!fs.existsSync(dir4)) {
         fs.mkdirSync(dir4);
     }
-
 
 
 }
